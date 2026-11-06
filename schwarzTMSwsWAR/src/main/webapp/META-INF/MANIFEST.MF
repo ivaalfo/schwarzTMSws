@@ -1,0 +1,2 @@
+Manifest-Version: 1.0
+Class-Path: schwarzTMSwsJAR-0.0.1-SNAPSHOT.jar schwarzTMSwsSEGjar-0.0.1-SNAPSHOT.jar

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appdeployment:Deployment xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:appdeployment="http://www.ibm.com/websphere/appserver/schemas/5.0/appdeployment.xmi" xmi:id="Deployment_1584026771141">
+  <deployedObject xmi:type="appdeployment:ApplicationDeployment" xmi:id="ApplicationDeployment_1584026771141" deploymentId="0" startingWeight="1" binariesURL="$(APP_INSTALL_ROOT)/${WAS_CELL_NAME}/schwarzTMSwsEAR.ear" useMetadataFromBinaries="false" enableDistribution="true" createMBeansForResources="true" reloadEnabled="false" appContextIDForSecurity="href:${WAS_CELL_NAME}/schwarzTMSwsEAR" filePermission=".*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755" allowDispatchRemoteInclude="false" allowServiceRemoteInclude="false" asyncRequestDispatchType="DISABLED" standaloneModule="false" enableClientModule="false">
+    <targetMappings xmi:id="DeploymentTargetMapping_1584026771141" enable="true" target="ServerTarget_1584026771141"/>
+    <classloader xmi:id="Classloader_1584026771141" mode="PARENT_FIRST">
+      <libraries xmi:id="LibraryRef_1584026771141" libraryName="Martico-SchwarzTMS-SharedLib" sharedClassloader="true"/>
+      <libraries xmi:id="LibraryRef_1584029000386" libraryName="SchwarzTMS-SharedLib" sharedClassloader="true"/>
+    </classloader>
+    <modules xmi:type="appdeployment:WebModuleDeployment" xmi:id="WebModuleDeployment_1584026771141" deploymentId="1" startingWeight="10000" uri="schwarzTMSwsWAR-0.0.1-SNAPSHOT.war" containsEJBContent="0">
+      <targetMappings xmi:id="DeploymentTargetMapping_1584026771142" target="ServerTarget_1584026771141"/>
+      <classloader xmi:id="Classloader_1584026771142"/>
+    </modules>
+    <properties xmi:id="Property_1584026771141" name="metadata.complete" value="false"/>
+  </deployedObject>
+  <deploymentTargets xmi:type="appdeployment:ServerTarget" xmi:id="ServerTarget_1584026771141" name="server1" nodeName="${WAS_CELL_NAME}"/>
+</appdeployment:Deployment>

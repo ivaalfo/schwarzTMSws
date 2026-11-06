@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd 
+						http://www.springframework.org/schema/security 
+						http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!-- Deshabilitar seguridad para la página de inicio o estáticos -->
+<!--     <http pattern="/index.jsp" security="none"/> -->
+
+    <!-- Filtro ligero sin sesiones ni login interactivo para tu API -->
+    <http entry-point-ref="customAuthenticationEntryPoint" create-session="stateless">
+        <csrf disabled="true"/>
+        <!-- Interceptamos el token MARTICO-API-KEY antes de los filtros estándar -->
+        <custom-filter ref="apiKeyAuthFilter" before="BASIC_AUTH_FILTER"/>
+        <intercept-url pattern="/**" access="permitAll"/> 
+    </http>
+
+    <!-- Declaración de Beans usando el prefijo exigido por tu validador -->
+    <beans:bean id="apiKeyAuthFilter" class="eus.martico.schwarz.seguridad.security.ApiKeyAuthFilter"/>
+
+    <beans:bean id="customAuthenticationEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
+    
+    <authentication-manager/>
+
+</beans:beans>

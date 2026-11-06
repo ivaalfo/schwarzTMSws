@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 	xmlns="http://www.springframework.org/schema/beans" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:mvc="http://www.springframework.org/schema/mvc"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:jee="http://www.springframework.org/schema/jee"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans 
+							http://www.springframework.org/schema/beans/spring-beans-4.3.xsd 
+							http://www.springframework.org/schema/mvc 
+							http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+							http://www.springframework.org/schema/tx 
+							http://www.springframework.org/schema/tx/spring-tx-4.3.xsd							
+							http://www.springframework.org/schema/context 
+							http://www.springframework.org/schema/context/spring-context-4.3.xsd
+							http://www.springframework.org/schema/jee
+							http://www.springframework.org/schema/jee/spring-jee-4.3.xsd"
+		default-init-method="init">
+
+	<!-- Ti -->
+	<bean id="applicationContextProvider"
+                        class="eus.martico.schwarz.control.spring.ApplicationContextProvider"/>
+
+	<!-- Cargamos los DAOs -->
+	<context:component-scan base-package="eus.martico.schwarz.dao"/>
+	<context:component-scan base-package="eus.martico.schwarz.dao.slots"/>
+<!-- 	<context:component-scan base-package="eus.martico.schwarz.dao.configuracion"/> -->
+<!-- 	<context:component-scan base-package="eus.martico.schwarz.dao.tabladetablas"/> -->
+	
+	<!-- Cargamos los servicios -->
+	<context:component-scan base-package="eus.martico.schwarz.seguridad.config"/>
+	<context:component-scan base-package="eus.martico.schwarz.seguridad.security"/>
+	<context:component-scan base-package="eus.martico.schwarz.seguridad.user.entity"/>
+	<context:component-scan base-package="eus.martico.schwarz.services.tabladetablas"/>
+
+	<context:component-scan base-package="eus.martico.schwarz.services"/>
+		
+	<!-- Cargamos Fichero de Propiedades -->
+	
+	<!-- using JEE namespace for lookup -->
+	<jee:jndi-lookup id="marticoDS" jndi-name="jdbc/marticoDS" resource-ref="true" expected-type="javax.sql.DataSource" />
+
+    <bean id="timeZone" class="java.util.Date"/>
+
+	<bean id="MyTransactionManager" class="org.springframework.transaction.jta.JtaTransactionManager" />
+    
+	<tx:annotation-driven transaction-manager="MyTransactionManager"/><!-- Needed for @Transactional annotation -->
+    
+</beans>
+	
