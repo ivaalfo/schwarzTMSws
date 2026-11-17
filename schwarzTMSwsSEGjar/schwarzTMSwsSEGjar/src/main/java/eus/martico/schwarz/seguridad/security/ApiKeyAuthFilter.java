@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.filter.GenericFilterBean;
 
-import eus.martico.schwarz.config.SchwarzConstantes;
+import eus.martico.schwarz.seguridad.config.ConstantesSEG;
 
 
 /**
@@ -24,8 +24,8 @@ import eus.martico.schwarz.config.SchwarzConstantes;
 public class ApiKeyAuthFilter extends GenericFilterBean {
 
 	//El token estático acordado
-	private static final String SECURITY_BEARER = SchwarzConstantes.SECURITY_BEARER;
-    private static final String VALID_TOKEN = SchwarzConstantes.BEARER_TOKEN_TMS_WS_API;
+	private static final String SECURITY_BEARER = ConstantesSEG.SECURITY_BEARER;
+    private static final String VALID_TOKEN = ConstantesSEG.BEARER_TOKEN_TMS_WS_API;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)

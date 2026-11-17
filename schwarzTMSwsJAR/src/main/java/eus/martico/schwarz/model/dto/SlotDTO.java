@@ -12,11 +12,11 @@ package eus.martico.schwarz.model.dto;
 public class SlotDTO {
 
 	private String dateTime;
-	private String togId;
+	private int togId;
 
 	public SlotDTO() {}
 
-	public SlotDTO(String dateTime, String togId) {
+	public SlotDTO(String dateTime, Integer togId) {
 		this.dateTime = dateTime;
 		this.togId = togId;
 	}
@@ -25,13 +25,16 @@ public class SlotDTO {
 	public String getDateTime() {
 		return dateTime;
 	}
+	
 	public void setDateTime(String dateTime) {
 		this.dateTime = dateTime;
 	}
-	public String getTogId() {
+	
+	public Integer getTogId() {
 		return togId;
 	}
-	public void setTogId(String togId) {
+	
+	public void setTogId(Integer togId) {
 		this.togId = togId;
 	}
 

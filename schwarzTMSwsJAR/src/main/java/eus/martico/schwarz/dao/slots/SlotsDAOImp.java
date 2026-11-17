@@ -37,7 +37,8 @@ public class SlotsDAOImp extends BaseGenDAO<SlotDTO> implements SlotsIDAO {
     
     //Query de TSReserve para recuperar el identificador único (suusky) en base a una fecha válida
     private static final String SQL_SELECT_RESERVA = 
-        "SELECT CHAR(suusky) AS reference, " +
+        "SELECT " +
+        "suusky AS reference, " +
         "sunudc AS muelle, " +
         "CHAR(sufech, iso) || 'T' || SUBSTR(ashors, (CAST(SUNUHO AS INT) * 10) - 9, 5) || ':00.000Z' AS fecha " +
         "FROM ldseus, ldorca, ldalse, ldalmx " +
@@ -54,8 +55,8 @@ public class SlotsDAOImp extends BaseGenDAO<SlotDTO> implements SlotsIDAO {
         "CHAR(sufech, iso) AS fecha_inicio, " +
         "SUBSTR(ashors, (CAST(SUNUHO AS INT) * 10) - 9, 5) || ':00.000Z' AS hora_inicio, " +
         "SUBSTR(ashors, (CAST(SUNUHO AS INT) * 10) - 4, 5) || ':00.000Z' AS hora_fin, " +
-        "CHAR(suusky) AS reference, " +
-        "TRIM(dodest) || '-' || CHAR(dodoky) AS res_ident " +
+        "TRIM(dodest) || '-' || CHAR(dodoky) AS reference, " +
+        "suusky AS res_ident " +
         "FROM ldseus, ldorca, ldalse, ldalmx, lddese " +
         "WHERE TRIM(alxcmp4) = ? " +
         "AND sualky = alxlky AND ocalky = sualky " +
@@ -84,7 +85,7 @@ public class SlotsDAOImp extends BaseGenDAO<SlotDTO> implements SlotsIDAO {
                 //Tu mapeador que lee el ResultSet
                 (rs, rowNum) -> {
                     SlotDTO slot = new SlotDTO();
-                    slot.setTogId(rs.getString("muelle"));
+                    slot.setTogId(rs.getInt("muelle"));
                     slot.setDateTime(rs.getString("fecha"));
                     return slot;
                 }
@@ -96,9 +97,9 @@ public class SlotsDAOImp extends BaseGenDAO<SlotDTO> implements SlotsIDAO {
 
     
     @Override
-    public String getReservaSlotReal(final String rdc, final String orderNumber, final String fechaSeleccionada) throws SlotsDAOException {
+    public Integer getReservaSlotReal(final String rdc, final String orderNumber, final String fechaSeleccionada) throws SlotsDAOException {
         try {
-            List<String> resultados = this.jdbcTemplate.query(SQL_SELECT_RESERVA, 
+            List<Integer> resultados = this.jdbcTemplate.query(SQL_SELECT_RESERVA, 
                 new PreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps) throws SQLException {
@@ -110,14 +111,14 @@ public class SlotsDAOImp extends BaseGenDAO<SlotDTO> implements SlotsIDAO {
                     }
                 }, 
                 //Mapeador rápido para recuperar solo el string de la referencia (suusky)
-                (rs, rowNum) -> rs.getString("reference")
+                (rs, rowNum) -> rs.getInt("reference")
             );
 
             if (resultados.isEmpty()) {
                 return null; 	//No se encontró coincidencia o hueco libre
             }
             
-            return resultados.get(0).trim(); 	//Devolvemos el suusky como identificador de reserva
+            return resultados.get(0); 	//Devolvemos el suusky como identificador de reserva
 
         } catch (DataAccessException e) {
             throw new SlotsDAOException("Error en consulta TSReserve con Setter explícito", e.getMessage());
@@ -147,7 +148,7 @@ public class SlotsDAOImp extends BaseGenDAO<SlotDTO> implements SlotsIDAO {
                     dto.setRequestedDeliveryTime(rs.getString("hora_inicio"));
                     dto.setRequestedDeliveryEndTime(rs.getString("hora_fin"));
                     dto.setReference(rs.getString("reference").trim());
-                    dto.setReservationId(rs.getString("res_ident").trim());
+                    dto.setReservationId(rs.getInt("res_ident"));
                     return dto;
                 }
             );

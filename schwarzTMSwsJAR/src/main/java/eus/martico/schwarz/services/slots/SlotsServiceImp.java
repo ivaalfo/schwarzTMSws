@@ -39,7 +39,7 @@ public class SlotsServiceImp implements SlotsIService {
     
     
 	@Override
-	public String registrarReservaSlot(String _rdc, String _orderNo, String _deliveryDate) 
+	public Integer registrarReservaSlot(String _rdc, String _orderNo, String _deliveryDate) 
 			throws SlotsServiceException {
 		try {
 			//Validamos la existencia de la reserva y recuperamos el ID.

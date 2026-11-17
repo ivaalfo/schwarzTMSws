@@ -16,8 +16,8 @@ public class TSBookLoadDTO {
 	private String targetCountry;
 	private String targetRdc;
 	private String targetName;
-	private String amount;
-	private String loadUnit;
+	private int amount;
+	private String loadUnitType;
 
 
 	//Getters y Setters...
@@ -57,17 +57,17 @@ public class TSBookLoadDTO {
 	public void setTargetName(String targetName) {
 		this.targetName = targetName;
 	}
-	public String getAmount() {
+	public Integer getAmount() {
 		return amount;
 	}
-	public void setAmount(String amount) {
+	public void setAmount(Integer amount) {
 		this.amount = amount;
 	}
-	public String getLoadUnit() {
-		return loadUnit;
+	public String getLoadUnitType() {
+		return loadUnitType;
 	}
-	public void setLoadUnit(String loadUnit) {
-		this.loadUnit = loadUnit;
+	public void setLoadUnitType(String loadUnitType) {
+		this.loadUnitType = loadUnitType;
 	}
 
 }

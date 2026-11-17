@@ -20,6 +20,7 @@ public interface SlotsIDAO {
 	 * @param _orderNumber
 	 * @param _fechaDesde
 	 * @param _fechaHasta
+	 * 
 	 * @return List<SlotDTO>
 	 * @throws SlotsDAOException
 	 */
@@ -31,10 +32,11 @@ public interface SlotsIDAO {
 	 * @param _rdc
 	 * @param _orderNo
 	 * @param _deliveryDate
-	 * @return String
+	 * 
+	 * @return Integer
 	 * @throws SlotsDAOException
 	 */
-	String getReservaSlotReal(String _rdc, String _orderNo, String _deliveryDate) 
+    Integer getReservaSlotReal(String _rdc, String _orderNo, String _deliveryDate) 
 			throws SlotsDAOException;
 
 	
@@ -42,6 +44,7 @@ public interface SlotsIDAO {
 	 * @param _rdc
 	 * @param _orderNo
 	 * @param _deliveryDate
+	 * 
 	 * @return TSBookResponseDTO
 	 */
 	TSBookResponseDTO confirmarReservaFinalReal(String _rdc, String _orderNo, String _deliveryDate) 

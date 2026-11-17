@@ -13,22 +13,27 @@ import java.util.List;
 public class TSBookDTO {
 
 	private String method;
+	
 	private String orderNumber;
 	private String recipientCountry;
 	private String recipientRDC;
 	private String requestedDeliveryDate;
 	private String requestedDeliveryTime;
-	private String togId;
+	
+	private int togId;
 	private List<TSBookLoadDTO> load; 	//Mapea el array JSON de la carga automáticamente
 	private String transporterName;
-	private String reservationId;
+	
+	private int reservationId;
 	private String licensePlate;
-	private String tsStatusUpdate;
-	private String goodsIn;
-	private String tsPrintOut;
+	
+	private boolean tsStatusUpdate;
+	private boolean goodsIn;
+	private boolean tsPrintOut;
+	
 	private String issuer;
 	private String uploadingDCT;
-	private String uploadingDateDCC;
+	private String uploadingDateDCT;
 	private String uploadingTimeDCT;
 
 
@@ -69,10 +74,10 @@ public class TSBookDTO {
 	public void setRequestedDeliveryTime(String requestedDeliveryTime) {
 		this.requestedDeliveryTime = requestedDeliveryTime;
 	}
-	public String getTogId() {
+	public Integer getTogId() {
 		return togId;
 	}
-	public void setTogId(String togId) {
+	public void setTogId(Integer togId) {
 		this.togId = togId;
 	}
 	public List<TSBookLoadDTO> getLoad() {
@@ -87,10 +92,10 @@ public class TSBookDTO {
 	public void setTransporterName(String transporterName) {
 		this.transporterName = transporterName;
 	}
-	public String getReservationId() {
+	public Integer getReservationId() {
 		return reservationId;
 	}
-	public void setReservationId(String reservationId) {
+	public void setReservationId(Integer reservationId) {
 		this.reservationId = reservationId;
 	}
 	public String getLicensePlate() {
@@ -99,22 +104,22 @@ public class TSBookDTO {
 	public void setLicensePlate(String licensePlate) {
 		this.licensePlate = licensePlate;
 	}
-	public String getTsStatusUpdate() {
+	public boolean getTsStatusUpdate() {
 		return tsStatusUpdate;
 	}
-	public void setTsStatusUpdate(String tsStatusUpdate) {
+	public void setTsStatusUpdate(boolean tsStatusUpdate) {
 		this.tsStatusUpdate = tsStatusUpdate;
 	}
-	public String getGoodsIn() {
+	public boolean getGoodsIn() {
 		return goodsIn;
 	}
-	public void setGoodsIn(String goodsIn) {
+	public void setGoodsIn(boolean goodsIn) {
 		this.goodsIn = goodsIn;
 	}
-	public String getTsPrintOut() {
+	public boolean getTsPrintOut() {
 		return tsPrintOut;
 	}
-	public void setTsPrintOut(String tsPrintOut) {
+	public void setTsPrintOut(boolean tsPrintOut) {
 		this.tsPrintOut = tsPrintOut;
 	}
 	public String getIssuer() {
@@ -129,11 +134,11 @@ public class TSBookDTO {
 	public void setUploadingDCT(String uploadingDCT) {
 		this.uploadingDCT = uploadingDCT;
 	}
-	public String getUploadingDateDCC() {
-		return uploadingDateDCC;
+	public String getUploadingDateDCT() {
+		return uploadingDateDCT;
 	}
-	public void setUploadingDateDCC(String uploadingDateDCC) {
-		this.uploadingDateDCC = uploadingDateDCC;
+	public void setUploadingDateDCT(String uploadingDateDCC) {
+		this.uploadingDateDCT = uploadingDateDCC;
 	}
 	public String getUploadingTimeDCT() {
 		return uploadingTimeDCT;

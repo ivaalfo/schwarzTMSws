@@ -34,10 +34,10 @@ public interface SlotsIService {
 	 * @param orderNo
 	 * @param deliveryDate
 	 * 
-	 * @return String
+	 * @return Integer
 	 * @throws SlotsServiceException
 	 */
-	String registrarReservaSlot(String rdc, String orderNo, String deliveryDate) 
+	Integer registrarReservaSlot(String rdc, String orderNo, String deliveryDate) 
 			throws SlotsServiceException;
 
 	

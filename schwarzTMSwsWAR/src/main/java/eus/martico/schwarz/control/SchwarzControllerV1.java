@@ -22,6 +22,7 @@ import eus.martico.schwarz.model.dto.TSRequestResponseDTO;
 import eus.martico.schwarz.model.dto.TSReserveDTO;
 import eus.martico.schwarz.model.dto.TSReserveResponseDTO;
 import eus.martico.schwarz.model.tms.SchwarzProcesoException;
+import eus.martico.schwarz.seguridad.timezone.DateTimeValidator;
 import eus.martico.schwarz.services.slots.SlotsIService;
 
 
@@ -48,7 +49,7 @@ public class SchwarzControllerV1 {
 			//Validamos que el método invocado sea el correcto
 			if (!"TSRequest".equalsIgnoreCase(requestData.getMethod())) {
 				Map<String, Object> errorBadMethod = new LinkedHashMap<>();
-				errorBadMethod.put("Result", 10);		//Su código de éxito "OK = 10"
+				errorBadMethod.put("Result", 30);
 				errorBadMethod.put("Information", "Error");
 				errorBadMethod.put("Message", "Method mismatch. Expected 'TSRequest'");
 				return new ResponseEntity<>(errorBadMethod, HttpStatus.BAD_REQUEST);
@@ -100,10 +101,18 @@ public class SchwarzControllerV1 {
 			//Validamos que el método invocado sea el correcto
 			if (!"TSReserve".equalsIgnoreCase(requestData.getMethod())) {
 				Map<String, Object> errorBadMethod = new LinkedHashMap<>();
-				errorBadMethod.put("Result", 10);
+				errorBadMethod.put("Result", 30);
 				errorBadMethod.put("Information", "Error");
 				errorBadMethod.put("Message", "Method mismatch. Expected 'TSReserve'");
 				return new ResponseEntity<>(errorBadMethod, HttpStatus.BAD_REQUEST);
+			}
+			//Validamos que la hora tenga un formato UTC válido (ej: 07:00:00.000Z)
+			if (!DateTimeValidator.esHoraValidaUTC(requestData.getRequestedDeliveryTime())) {
+			    Map<String, Object> errorBadTime = new LinkedHashMap<>();
+			    errorBadTime.put("Result", 30);
+			    errorBadTime.put("Information", "Error");
+			    errorBadTime.put("Message", "Invalid time format. Expected ISO UTC format (07:00:00Z or 07:00:00.000Z)");
+			    return new ResponseEntity<>(errorBadTime, HttpStatus.BAD_REQUEST);
 			}
 
 			logger.info("Procesando TSReserve para la orden: {} en el muelle (togId): {}", 
@@ -112,15 +121,16 @@ public class SchwarzControllerV1 {
 			String rdc = requestData.getRecipientRDC();
 	        String orderNo = requestData.getOrderNumber();
 	        String deliveryDate = requestData.getRequestedDeliveryDate();
-	        //String deliveryTime = requestData.getRequestedDeliveryTime();		//No hace falta pues ya esta reservado previamente por salidas por lo que la hora coincidirá ???¿¿¿
+	        //String deliveryTime = requestData.getRequestedDeliveryTime();
+	        //XXX No hace falta pues ya esta reservado previamente por salidas por lo que la hora coincidirá ???¿¿¿
 	        //String togId = requestData.getTogId();
 	        
-	        //El servicio debe insertar/actualizar en AS400 y retornar el ID generado. Si falla, debería devolver null o vacío.
-	        String idReservaGenerated = iSlotService.registrarReservaSlot(rdc, orderNo, deliveryDate);
+	        //XXX LLAMADA: El servicio debe insertar/actualizar en AS400 y retornar el ID generado. Si falla, debería devolver null o vacío.
+	        Integer idReservaGenerated = iSlotService.registrarReservaSlot(rdc, orderNo, deliveryDate);
 			
 	        //Control de errores del negocio
 	        //Si no se ha podido realizar la reserva no se genera ID (porque el muelle se ha ocupado en ese instante, etc.)
-	        if (idReservaGenerated == null || idReservaGenerated.isEmpty()) {
+	        if (idReservaGenerated == null || idReservaGenerated <= 0) {
 	            Map<String, Object> errorNoSlots = new LinkedHashMap<>();
 	            errorNoSlots.put("Result", 30);
 	            errorNoSlots.put("Information", "Error");
@@ -129,7 +139,7 @@ public class SchwarzControllerV1 {
 	        }
 
 	        TSReserveResponseDTO response = new TSReserveResponseDTO();
-	        response.setResult(10); 		//Su código de éxito "OK = 10"
+	        response.setResult(10); 		//Código de éxito "OK = 10"
 	        response.setOrderNumber(orderNo);
 	        response.setReservationId(idReservaGenerated);
 
@@ -147,20 +157,28 @@ public class SchwarzControllerV1 {
 	
 	
 	@PostMapping("/tsBook")
-	public ResponseEntity<Object> confirmarReservaTimeSlots(@RequestBody TSBookDTO requestData) {		
+	public ResponseEntity<Object> confirmarReservaTimeSlots(@RequestBody TSBookDTO requestData) {
 	    try {
 	        if (!"TSBook".equalsIgnoreCase(requestData.getMethod())) {
 	            Map<String, Object> errorBadMethod = new LinkedHashMap<>();
-	            errorBadMethod.put("Result", 10);
+	            errorBadMethod.put("Result", 30);
 	            errorBadMethod.put("Information", "Error");
 	            errorBadMethod.put("Message", "Method mismatch. Expected 'TSBook'");
 	            return new ResponseEntity<>(errorBadMethod, HttpStatus.BAD_REQUEST);
+	        }
+	        //Validamos que la hora tenga un formato UTC válido (ej: 07:00:00.000Z)
+	        if (!DateTimeValidator.esHoraValidaUTC(requestData.getRequestedDeliveryTime())) {
+	            Map<String, Object> errorBadTime = new LinkedHashMap<>();
+	            errorBadTime.put("Result", 30);
+	            errorBadTime.put("Information", "Error");
+	            errorBadTime.put("Message", "Invalid time format. Expected ISO UTC format (07:00:00Z or 07:00:00.000Z)");
+	            return new ResponseEntity<>(errorBadTime, HttpStatus.BAD_REQUEST);
 	        }
 
 	        logger.info("Confirmando TSBook definitivo para la orden: {} con matricula: {}", 
 	                requestData.getOrderNumber(), requestData.getLicensePlate());
 	        
-	        //LLAMADA AL JAR: El servicio procesará la carga, registrará la matrícula en el AS400.
+	        //XXX LLAMADA: El servicio procesará la carga, ¿¿registrará la matrícula en el AS400??
 	        //Deberá devolver un objeto DTO con los datos de confirmación y tiempos que genera la BD.
 	        TSBookResponseDTO resultadoBook = iSlotService.confirmarReservaFinal(requestData);
 			
@@ -174,7 +192,7 @@ public class SchwarzControllerV1 {
 	        }
 
 	        //Si todo va bien, inyectamos los códigos fijos y retornamos
-	        resultadoBook.setResult(10); 
+	        resultadoBook.setResult(10); 	//Código de éxito "OK = 10"
 	        return new ResponseEntity<>(resultadoBook, HttpStatus.OK);
 	        
 	    } catch (Exception e) {
@@ -186,6 +204,12 @@ public class SchwarzControllerV1 {
 	        return new ResponseEntity<>(errorCritico, HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	}
+	
+	//TODO NEXT
+//	@PostMapping("/tsDelete")
+//	public ResponseEntity<Object> anularReserva(@RequestBody TSDeleteDTO requestData){
+//		
+//	}
 	
 
 	public ResponseEntity<String> handleException(SchwarzProcesoException ex) {

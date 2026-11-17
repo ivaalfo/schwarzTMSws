@@ -13,14 +13,14 @@ public class TSBookResponseDTO {
     private String requestedDeliveryDate;
     private String requestedDeliveryTime;
     private String requestedDeliveryEndTime;
-    private String reservationId;
+    private int reservationId;
     
     
     //Getters y Setters...
-	public int getResult() {
+	public Integer getResult() {
 		return result;
 	}
-	public void setResult(int result) {
+	public void setResult(Integer result) {
 		this.result = result;
 	}
 	public String getOrderNumber() {
@@ -53,10 +53,10 @@ public class TSBookResponseDTO {
 	public void setRequestedDeliveryEndTime(String requestedDeliveryEndTime) {
 		this.requestedDeliveryEndTime = requestedDeliveryEndTime;
 	}
-	public String getReservationId() {
+	public Integer getReservationId() {
 		return reservationId;
 	}
-	public void setReservationId(String reservationId) {
+	public void setReservationId(Integer reservationId) {
 		this.reservationId = reservationId;
 	}
 	

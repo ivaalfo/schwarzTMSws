@@ -18,10 +18,12 @@ public class TSRequestDTO {
 	private String recipientRDC;
 	private String requestedDeliveryDateFrom;
 	private String requestedDeliveryDateTo;
-	private String maintogId;
-	private String togId;
+	
+	private int mainTogId;
+	private int togId;
 	private String transporterName;
-	private String palletCount;
+	
+	private int palletCountEP;
 
 	//Getters y Setters...
 	public String getMethod() {
@@ -61,16 +63,16 @@ public class TSRequestDTO {
 	public void setRequestedDeliveryDateTo(String requestedDeliveryDateTo) {
 		this.requestedDeliveryDateTo = requestedDeliveryDateTo;
 	}
-	public String getMaintogId() {
-		return maintogId;
+	public Integer getMaintogId() {
+		return mainTogId;
 	}
-	public void setMaintogId(String maintogId) {
-		this.maintogId = maintogId;
+	public void setMaintogId(Integer maintogId) {
+		this.mainTogId = maintogId;
 	}
-	public String getTogId() {
+	public Integer getTogId() {
 		return togId;
 	}
-	public void setTogId(String togId) {
+	public void setTogId(Integer togId) {
 		this.togId = togId;
 	}
 	public String getTransporterName() {
@@ -79,11 +81,11 @@ public class TSRequestDTO {
 	public void setTransporterName(String transporterName) {
 		this.transporterName = transporterName;
 	}
-	public String getPalletCount() {
-		return palletCount;
+	public Integer getPalletCountEP() {
+		return palletCountEP;
 	}
-	public void setPalletCount(String palletCount) {
-		this.palletCount = palletCount;
+	public void setPalletCountEP(Integer palletCountEP) {
+		this.palletCountEP = palletCountEP;
 	}
 	
 }

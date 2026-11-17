@@ -1,8 +1,5 @@
 package eus.martico.schwarz.config;
 
-import eus.martico.schwarz.config.ws.SchwarzWsConfig;
-
-
 /**
  * 
  * @author Martico S.L. :: ialfonso
@@ -11,10 +8,7 @@ import eus.martico.schwarz.config.ws.SchwarzWsConfig;
  *
  */
 public class SchwarzConstantes {
-	
-	public static final String CONTENT_TYPE_APPLICATION_JSON = "application/json";
-	public static final String SECURITY_BEARER = "Bearer ";
-	
+		
 	public static final Long DEFAULT_USER_NI = 0L;
 	
 	public static final String SCHWARZ_FICHERO_PROPERTIES = "schwarzTMS.properties";
@@ -29,9 +23,4 @@ public class SchwarzConstantes {
 	public static final String PROPERTY_KEY_DATA_TRUNCATION_STRINGS = "schwarz.data.truncation.key.strings";
 	public static final String PROPERTY_KEY_VIOLATES_FOREIGN_KEY = "schwarz.violates.foreign.key.strings";
 	
-	
-	public static final String PROPERTY_KEY_TOKEN_TMS_WS_API = "wsTMS.api.bearer.token";
-	public static final String BEARER_TOKEN_TMS_WS_API = SchwarzWsConfig.getProperty(PROPERTY_KEY_TOKEN_TMS_WS_API);
-	
-
 }

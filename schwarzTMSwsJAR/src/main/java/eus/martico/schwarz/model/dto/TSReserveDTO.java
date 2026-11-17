@@ -16,12 +16,13 @@ public class TSReserveDTO {
 	private String recipientRDC;
 	private String requestedDeliveryDate;
 	private String requestedDeliveryTime;
-	private String togId;
+	
+	private int togId;
 	private String transporterName;
 
-	private Integer reservationHoursInAdvance;
+	private int reservationHoursInAdvance;
 	private String reservationType;
-	private String palletCount;
+	private int palletCountEP;
 
 
 	//Getters, Setters y Constructor...
@@ -73,11 +74,11 @@ public class TSReserveDTO {
 		this.requestedDeliveryTime = requestedDeliveryTime;
 	}
 
-	public String getTogId() {
+	public Integer getTogId() {
 		return togId;
 	}
 
-	public void setTogId(String togId) {
+	public void setTogId(Integer togId) {
 		this.togId = togId;
 	}
 
@@ -105,12 +106,12 @@ public class TSReserveDTO {
 		this.reservationType = reservationType;
 	}
 
-	public String getPalletCount() {
-		return palletCount;
+	public Integer getPalletCountEP() {
+		return palletCountEP;
 	}
 
-	public void setPalletCount(String palletCount) {
-		this.palletCount = palletCount;
+	public void setPalletCountEP(Integer palletCountEP) {
+		this.palletCountEP = palletCountEP;
 	}
 
 }
