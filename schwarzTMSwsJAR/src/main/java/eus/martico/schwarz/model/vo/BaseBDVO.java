@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import eus.martico.schwarz.config.SchwarzConstantes;
+import eus.martico.schwarz.config.tmsConstantes;
 
 /* Bean basico de base de datos */
 public class BaseBDVO extends EntityVO {
@@ -16,10 +16,10 @@ public class BaseBDVO extends EntityVO {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private Long userBaja;	
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@JsonFormat(pattern = SchwarzConstantes.JSON_DATETIME_FORMAT)
+	@JsonFormat(pattern = tmsConstantes.JSON_DATETIME_FORMAT)
 	private LocalDateTime fechaAlta;
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@JsonFormat(pattern = SchwarzConstantes.JSON_DATETIME_FORMAT)
+	@JsonFormat(pattern = tmsConstantes.JSON_DATETIME_FORMAT)
 	private LocalDateTime fechaBaja;
 
 	public BaseBDVO() {
@@ -40,7 +40,7 @@ public class BaseBDVO extends EntityVO {
 	public void setUserBaja(Long userBaja) {
 		this.userBaja = userBaja;
 	}
-	@JsonFormat(pattern=SchwarzConstantes.JSON_DATETIME_FORMAT)
+	@JsonFormat(pattern=tmsConstantes.JSON_DATETIME_FORMAT)
 	public LocalDateTime getFechaAlta() {
 		return fechaAlta;
 	}

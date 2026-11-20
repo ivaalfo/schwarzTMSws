@@ -2,8 +2,8 @@ package eus.martico.schwarz.dao;
 
 import java.sql.SQLException;
 
-import eus.martico.schwarz.config.SchwarzConstantes;
-import eus.martico.schwarz.config.ws.SchwarzWsConfig;
+import eus.martico.schwarz.config.tmsConstantes;
+import eus.martico.schwarz.config.ws.tmsWsConfig;
 import eus.martico.schwarz.model.IMyException;
 import eus.martico.schwarz.model.error.vo.ErrorVO;
 import eus.martico.schwarz.model.vo.ValidateDTO;
@@ -13,13 +13,13 @@ public class DAOException extends SQLException implements IMyException {
 	
 	private static final long serialVersionUID = 7689919380968929453L;
 
-	private static final String[] SQLERRMSG_CLAVEDUPLICADA_A = SchwarzWsConfig.getStringArray(SchwarzConstantes.PROPERTY_KEY_CLAVE_DUPLICADA_STRINGS);
+	private static final String[] SQLERRMSG_CLAVEDUPLICADA_A = tmsWsConfig.getStringArray(tmsConstantes.PROPERTY_KEY_CLAVE_DUPLICADA_STRINGS);
 	public static final String SQLERRCODE_CLAVEDUPLICADA = (SQLERRMSG_CLAVEDUPLICADA_A == null ? null : SQLERRMSG_CLAVEDUPLICADA_A[0]);
 	
-	private static final String[] SQLERRMSG_DATA_TRUNCATION_A = SchwarzWsConfig.getStringArray(SchwarzConstantes.PROPERTY_KEY_DATA_TRUNCATION_STRINGS);
+	private static final String[] SQLERRMSG_DATA_TRUNCATION_A = tmsWsConfig.getStringArray(tmsConstantes.PROPERTY_KEY_DATA_TRUNCATION_STRINGS);
 	public static final String SQLERRMSG_DATA_TRUNCATION = (SQLERRMSG_DATA_TRUNCATION_A == null ? null : SQLERRMSG_DATA_TRUNCATION_A[0]);
 	
-	private static final String[] SQLERRMSG_VIOLATES_FOREIGN_KEY_A = SchwarzWsConfig.getStringArray(SchwarzConstantes.PROPERTY_KEY_VIOLATES_FOREIGN_KEY);
+	private static final String[] SQLERRMSG_VIOLATES_FOREIGN_KEY_A = tmsWsConfig.getStringArray(tmsConstantes.PROPERTY_KEY_VIOLATES_FOREIGN_KEY);
 	public static final String SQLERRCODE_VIOLATES_FOREIGN_KEY = (SQLERRMSG_VIOLATES_FOREIGN_KEY_A == null ? null : SQLERRMSG_VIOLATES_FOREIGN_KEY_A[0]); 
 
 	public static final String SQLERRCODE_GET_DAO = "SQL00000";

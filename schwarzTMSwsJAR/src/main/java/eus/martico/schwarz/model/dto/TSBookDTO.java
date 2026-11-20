@@ -24,7 +24,7 @@ public class TSBookDTO {
 	private List<TSBookLoadDTO> load; 	//Mapea el array JSON de la carga automáticamente
 	private String transporterName;
 	
-	private int reservationId;
+	private long reservationId;
 	private String licensePlate;
 	
 	private boolean tsStatusUpdate;
@@ -92,10 +92,10 @@ public class TSBookDTO {
 	public void setTransporterName(String transporterName) {
 		this.transporterName = transporterName;
 	}
-	public Integer getReservationId() {
+	public Long getReservationId() {
 		return reservationId;
 	}
-	public void setReservationId(Integer reservationId) {
+	public void setReservationId(Long reservationId) {
 		this.reservationId = reservationId;
 	}
 	public String getLicensePlate() {

@@ -13,7 +13,7 @@ public class TSBookResponseDTO {
     private String requestedDeliveryDate;
     private String requestedDeliveryTime;
     private String requestedDeliveryEndTime;
-    private int reservationId;
+    private long reservationId;
     
     
     //Getters y Setters...
@@ -53,10 +53,10 @@ public class TSBookResponseDTO {
 	public void setRequestedDeliveryEndTime(String requestedDeliveryEndTime) {
 		this.requestedDeliveryEndTime = requestedDeliveryEndTime;
 	}
-	public Integer getReservationId() {
+	public Long getReservationId() {
 		return reservationId;
 	}
-	public void setReservationId(Integer reservationId) {
+	public void setReservationId(Long reservationId) {
 		this.reservationId = reservationId;
 	}
 	

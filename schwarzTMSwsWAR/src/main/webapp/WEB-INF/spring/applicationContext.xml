@@ -23,15 +23,16 @@
 
 	<!-- Cargamos los DAOs -->
 	<context:component-scan base-package="eus.martico.schwarz.dao"/>
+	<context:component-scan base-package="eus.martico.schwarz.dao.configuracion"/>
 	<context:component-scan base-package="eus.martico.schwarz.dao.slots"/>
-<!-- 	<context:component-scan base-package="eus.martico.schwarz.dao.configuracion"/> -->
-<!-- 	<context:component-scan base-package="eus.martico.schwarz.dao.tabladetablas"/> -->
+	<context:component-scan base-package="eus.martico.schwarz.dao.slots.internal"/>
+	<context:component-scan base-package="eus.martico.schwarz.dao.slots.external"/>
+	<context:component-scan base-package="eus.martico.schwarz.dao.slots.anulation"/>
 	
 	<!-- Cargamos los servicios -->
 	<context:component-scan base-package="eus.martico.schwarz.seguridad.config"/>
 	<context:component-scan base-package="eus.martico.schwarz.seguridad.security"/>
-	<context:component-scan base-package="eus.martico.schwarz.seguridad.user.entity"/>
-	<context:component-scan base-package="eus.martico.schwarz.services.tabladetablas"/>
+	<context:component-scan base-package="eus.martico.schwarz.seguridad.timezone"/>
 
 	<context:component-scan base-package="eus.martico.schwarz.services"/>
 		

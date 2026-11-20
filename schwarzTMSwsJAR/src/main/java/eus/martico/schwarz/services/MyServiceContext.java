@@ -3,7 +3,7 @@ package eus.martico.schwarz.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eus.martico.schwarz.config.SchwarzConstantes;
+import eus.martico.schwarz.config.tmsConstantes;
 
 public class MyServiceContext {
 
@@ -20,7 +20,7 @@ public class MyServiceContext {
 	}
 	
 	
-	private Long usuarioNi = SchwarzConstantes.DEFAULT_USER_NI;
+	private Long usuarioNi = tmsConstantes.DEFAULT_USER_NI;
 	private String username;
 	private String sessionId;
 	private String[] userRoles;

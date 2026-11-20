@@ -1,6 +1,6 @@
 package eus.martico.schwarz.seguridad.config;
 
-import eus.martico.schwarz.config.ws.SchwarzWsConfig;
+import eus.martico.schwarz.config.ws.tmsWsConfig;
 
 /**
  * 
@@ -15,6 +15,6 @@ public class ConstantesSEG {
 	public static final String SECURITY_BEARER = "Bearer ";
 	
 	public static final String PROPERTY_KEY_TOKEN_TMS_WS_API = "wsTMS.api.bearer.token";
-	public static final String BEARER_TOKEN_TMS_WS_API = SchwarzWsConfig.getProperty(PROPERTY_KEY_TOKEN_TMS_WS_API);
+	public static final String BEARER_TOKEN_TMS_WS_API = tmsWsConfig.getProperty(PROPERTY_KEY_TOKEN_TMS_WS_API);
 	
 }

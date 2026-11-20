@@ -12,7 +12,7 @@ public class TSReserveResponseDTO {
 
 	private int result;
 	private String orderNumber;
-	private int reservationId;
+	private long reservationId;
 	
 	
 	//Getters, Setters y Constructor...
@@ -32,11 +32,11 @@ public class TSReserveResponseDTO {
 		this.orderNumber = orderNumber;
 	}
 
-	public Integer getReservationId() {
+	public Long getReservationId() {
 		return reservationId;
 	}
 
-	public void setReservationId(Integer reservationId) {
+	public void setReservationId(Long reservationId) {
 		this.reservationId = reservationId;
 	}
 	

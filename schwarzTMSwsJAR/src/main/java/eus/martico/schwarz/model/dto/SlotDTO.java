@@ -21,7 +21,7 @@ public class SlotDTO {
 		this.togId = togId;
 	}
 
-	// Getters y Setters...
+	//Getters y Setters...
 	public String getDateTime() {
 		return dateTime;
 	}
