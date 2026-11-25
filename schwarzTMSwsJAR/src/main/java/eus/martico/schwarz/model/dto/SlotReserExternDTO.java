@@ -8,14 +8,21 @@ package eus.martico.schwarz.model.dto;
  * @see https://www.martico.es/
  *
  */
-public class SlotDetailDTO {
+public class SlotReserExternDTO {
 
+	private long reservationId;
 	private String date;
-	private int dock;      //Mapea 'muelle' (sunudc)
+	private int dock;
 	private String startTime;
 	private String endTime;
 	
 	//Getters y Setters de todos los campos...
+	public Long getReservationId() {
+		return reservationId;
+	}
+	public void setReservationId(Long reservationId) {
+		this.reservationId = reservationId;
+	}
 	public String getDate() {
 		return date;
 	}
@@ -40,4 +47,5 @@ public class SlotDetailDTO {
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
+	
 }

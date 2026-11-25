@@ -20,7 +20,7 @@ public interface CancelSlotIDAO {
 	 * @return String
 	 * @throws InternalSlotsDAOException
 	 */
-	String getReferenceParaAnular(String _rdc, String _orderNo, String _deliveryDate, Long _reservationId)
+	String getReferenceToCancel(String _rdc, String _orderNo, String _deliveryDate, Long _reservationId)
 			throws CancelSlotDAOException;
 
 	
@@ -28,7 +28,7 @@ public interface CancelSlotIDAO {
 	 * @param _reservationId
 	 * @throws InternalSlotsDAOException
 	 */
-	void ejecutarAnulacionReserva(Long _reservationId) 
+	void setCancelReservation(Long _reservationId) 
 			throws CancelSlotDAOException;
 
 }

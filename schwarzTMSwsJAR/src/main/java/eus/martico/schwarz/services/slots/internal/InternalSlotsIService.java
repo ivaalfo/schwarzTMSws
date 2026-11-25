@@ -2,6 +2,7 @@ package eus.martico.schwarz.services.slots.internal;
 
 import java.util.List;
 
+import eus.martico.schwarz.dao.slots.booking.BookingSlotsDAOException;
 import eus.martico.schwarz.model.dto.SlotDTO;
 import eus.martico.schwarz.model.dto.TSBookDTO;
 import eus.martico.schwarz.model.dto.TSBookResponseDTO;
@@ -46,9 +47,10 @@ public interface InternalSlotsIService {
 	 * 
 	 * @return TSBookResponseDTO
 	 * @throws InternalSlotsServiceException
+	 * @throws BookingSlotsDAOException 
 	 */
-	TSBookResponseDTO confirmarReservaSlot(TSBookDTO _requestData) 
-			throws InternalSlotsServiceException;
+	TSBookResponseDTO confirmarReservaSlotInterna(TSBookDTO _requestData) 
+			throws InternalSlotsServiceException, BookingSlotsDAOException;
 	
 	
 }

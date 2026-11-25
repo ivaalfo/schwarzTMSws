@@ -2,8 +2,10 @@ package eus.martico.schwarz.services.slots.external;
 
 import java.util.List;
 
-import eus.martico.schwarz.model.dto.SlotDetailDTO;
-import eus.martico.schwarz.model.dto.SlotSummaryDTO;
+import eus.martico.schwarz.model.dto.SlotReserExternDTO;
+import eus.martico.schwarz.model.dto.SlotReqExternDTO;
+import eus.martico.schwarz.model.dto.TSBookDTO;
+import eus.martico.schwarz.model.dto.TSBookResponseDTO;
 
 /**
  * 
@@ -14,12 +16,35 @@ import eus.martico.schwarz.model.dto.SlotSummaryDTO;
  */
 public interface ExternalSlotsIService {
 
-	//XXX TO_USE NUEVO: si el pedido es EXTERNO a MARTICO (SQL_SELECT_ALL_TIME_SLOTS)
-	List<SlotSummaryDTO> buscarTodosSlotsLibres(String _fechaDesde, String _fechaHasta) 
+	/**
+	 * @param _fechaDesde
+	 * @param _fechaHasta
+	 * @param deliveryDateTo 
+	 * 
+	 * @return List<SlotDTO>
+	 * @throws ExternalSlotsServiceException
+	 */
+	List<SlotReqExternDTO> buscarTodosSlotsLibres(String _fechaDesde, String _fechaHasta)
 			throws ExternalSlotsServiceException;
 
-	//XXX TO_USE NUEVO: si el pedido es EXTERNO a MARTICO (SQL_SELECT_RESERVA_DETALLE)
-	List<SlotDetailDTO> buscarDetalleSlotsPorFecha(String _rdc, String _fechaEntrega) 
+	/**
+	 * @param _rdc
+	 * @param _fechaEntrega
+	 * 
+	 * @return List<SlotDetailDTO>
+	 * @throws ExternalSlotsServiceException
+	 */
+	List<SlotReserExternDTO> buscarDetalleSlotsPorFecha(String _rdc, String _fechaEntrega)
+			throws ExternalSlotsServiceException;
+
+	/**
+	 * @param _requestData
+	 * @param _isInterno
+	 * 
+	 * @return TSBookResponseDTO
+	 * @throws ExternalSlotsServiceException 
+	 */
+	TSBookResponseDTO confirmarReservaSlotExterna(TSBookDTO _requestData)
 			throws ExternalSlotsServiceException;
 
 }

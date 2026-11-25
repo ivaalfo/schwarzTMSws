@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import eus.martico.schwarz.dao.BaseGenDAO;
 import eus.martico.schwarz.model.dto.SlotDTO;
-import eus.martico.schwarz.model.dto.TSBookResponseDTO;
 
 
 /**
@@ -52,27 +51,6 @@ public class InternalSlotsDAOImp extends BaseGenDAO<SlotDTO> implements Internal
 			        "AND sufech = ? " + 
 			        "AND asasky = suasky";
     
-    //Query de TSBook para recuperar los datos de confirmación final y tiempos estimados
-    private static final String SQL_SELECT_BOOK_SLOT = 
-        "SELECT " +
-        	"CHAR(sufech, iso) AS fecha_inicio, " +
-        	"SUBSTR(ashors, (CAST(SUNUHO AS INT) * 10) - 9, 5) || ':00.000Z' AS hora_inicio, " +
-        	"SUBSTR(ashors, (CAST(SUNUHO AS INT) * 10) - 4, 5) || ':00.000Z' AS hora_fin, " +
-        	"TRIM(dodest) || '-' || CHAR(dodoky) AS reference, " +
-        	"suusky AS reserva_id " +
-        		"FROM ldseus, ldorca, ldalse, ldalmx, lddese " +
-        		"WHERE TRIM(alxcmp4) = ? " +
-        			"AND sualky = alxlky " +
-        			"AND ocalky = sualky " +
-			        "AND doorky = ocorky " +
-			        "AND suorky = ocorky " +
-			        "AND ocorde = ? " +
-			        "AND sufech = ? " +
-			        "AND suusky = ? " +
-			        "AND asasky = suasky";
-    
-    
-    
     @Override
     public List<SlotDTO> getTimeSlot(final String _rdc, final String _orderNum, final String _dateFrom, final String _dateTo) 
     		throws InternalSlotsDAOException {
@@ -94,6 +72,7 @@ public class InternalSlotsDAOImp extends BaseGenDAO<SlotDTO> implements Internal
                 //El mapeador que lee el ResultSet
                 (rs, rowNum) -> {
                     SlotDTO slot = new SlotDTO();
+                    slot.setRecipientRDC(_rdc);
                     slot.setTogId(rs.getInt("muelle"));
                     slot.setDateTime(rs.getString("fecha"));
                     return slot;
@@ -137,46 +116,7 @@ public class InternalSlotsDAOImp extends BaseGenDAO<SlotDTO> implements Internal
     }
     
     
-    @Override
-    public TSBookResponseDTO getSlotBookInfo(final String _rdc, final String _orderNum, final String _deliveryDate, final Long _reserveId) 
-    		throws InternalSlotsDAOException {
-        try {
-            List<TSBookResponseDTO> resultados = this.jdbcTemplate.query(SQL_SELECT_BOOK_SLOT, 
-                new PreparedStatementSetter() {
-                    @Override
-                    public void setValues(PreparedStatement ps) throws SQLException {
-                        int i = 1;
-                        ps.setString(i++, _rdc);
-                        ps.setString(i++, _orderNum);
-                        //Mantenemos el truco de pasar el Date nativo al optimizador de AS400
-                        ps.setDate(i++, java.sql.Date.valueOf(_deliveryDate));
-                        ps.setLong(i++, _reserveId);
-                    }
-                }, 
-                //Mapeador para rellenar directamente el DTO de salida limpio
-                (rs, rowNum) -> {
-                    TSBookResponseDTO dto = new TSBookResponseDTO();
-                    dto.setOrderNumber(_orderNum);
-                    dto.setRequestedDeliveryDate(rs.getString("fecha_inicio"));
-                    dto.setRequestedDeliveryTime(rs.getString("hora_inicio"));
-                    dto.setRequestedDeliveryEndTime(rs.getString("hora_fin"));
-                    dto.setReference(rs.getString("reference").trim());
-                    dto.setReservationId(rs.getLong("reserva_id"));
-                    return dto;
-                }
-            );
-
-            if (resultados.isEmpty()) {
-            	//Si no encuentra concordancias en las tablas
-                return null;
-            }
-            //Devolvemos el DTO relleno para el controlador
-            return resultados.get(0);
-
-        } catch (DataAccessException e) {
-            throw new InternalSlotsDAOException("Error en consulta TSBook con Setter explícito", e.getMessage());
-        }
-    }
+    
     
     
 }

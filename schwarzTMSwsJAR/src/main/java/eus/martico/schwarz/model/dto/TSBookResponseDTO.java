@@ -2,7 +2,10 @@ package eus.martico.schwarz.model.dto;
 
 
 /**
- * @author IvanAlfonsoAparicio
+ * 
+ * @author Martico S.L. :: ialfonso
+ * @version 1.0
+ * @see https://www.martico.es/
  *
  */
 public class TSBookResponseDTO {

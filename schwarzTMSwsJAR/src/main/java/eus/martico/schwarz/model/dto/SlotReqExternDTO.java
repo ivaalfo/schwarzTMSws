@@ -7,11 +7,11 @@ package eus.martico.schwarz.model.dto;
  * @see https://www.martico.es/
  *
  */
-public class SlotSummaryDTO {
+public class SlotReqExternDTO {
 	
 	private String recipientRDC;
     private String date;
-    private int availableSlots;
+    private int freeSlots;
     
     
     //Getters y Setters...
@@ -27,11 +27,11 @@ public class SlotSummaryDTO {
 	public void setDate(String date) {
 		this.date = date;
 	}
-	public Integer getAvailableSlots() {
-		return availableSlots;
+	public Integer getFreeSlots() {
+		return freeSlots;
 	}
-	public void setAvailableSlots(Integer freeSlots) {
-		this.availableSlots = freeSlots;
+	public void setFreeSlots(Integer freeSlots) {
+		this.freeSlots = freeSlots;
 	}
     
 }

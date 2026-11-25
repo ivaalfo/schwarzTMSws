@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import eus.martico.schwarz.dao.slots.booking.BookingSlotsDAOException;
+import eus.martico.schwarz.dao.slots.booking.BookingSlotsIDAO;
 import eus.martico.schwarz.dao.slots.internal.InternalSlotsDAOException;
 import eus.martico.schwarz.dao.slots.internal.InternalSlotsIDAO;
 import eus.martico.schwarz.model.dto.SlotDTO;
@@ -25,6 +27,9 @@ public class InternalSlotsServiceImp implements InternalSlotsIService {
 
     @Autowired 
     private InternalSlotsIDAO internalSlotsDAO;
+    
+    @Autowired
+    private BookingSlotsIDAO bookingSlotsDAO;
     
     
     
@@ -51,8 +56,8 @@ public class InternalSlotsServiceImp implements InternalSlotsIService {
 	}	
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public TSBookResponseDTO confirmarReservaSlot(TSBookDTO _requestData) 
+	@Transactional(readOnly = true)
+	public TSBookResponseDTO confirmarReservaSlotInterna(TSBookDTO _requestData) 
 			throws InternalSlotsServiceException {
 		try {
 			String rdc = _requestData.getRecipientRDC();
@@ -60,26 +65,17 @@ public class InternalSlotsServiceImp implements InternalSlotsIService {
 			String reqDeliveryDate = _requestData.getRequestedDeliveryDate();
 			Long reserveID = _requestData.getReservationId();
 			
-			
 			//1.Comprobamos si el slot existe y si es válido para confirmar
-			TSBookResponseDTO datosReserva = internalSlotsDAO.getSlotBookInfo(rdc, orderNo, reqDeliveryDate, reserveID);
+			TSBookResponseDTO datosReserva = bookingSlotsDAO.getSlotBookInfo(rdc, orderNo, reqDeliveryDate, reserveID);
             
-			//Si no existe o ya estaba cogido, salimos sin tocar ninguna tabla
+			//Si no existe o ya estaba cogido
 	        if (datosReserva == null) {
 	            return null;
 	        }
-
-	        //TODO confirmar booking
-	        //2.Si existe, ejecutamos los 3 UPDATES dentro de la misma transacción
-//	        slotsDAO.actualizarLdorca(...);
-//	        slotsDAO.actualizarLddese(...);
-//	        slotsDAO.actualizarLdseus(...);
-
-	        //3.Si los 3 UPDATES van bien, Spring hace COMMIT al salir y devolvemos el DTO
+	        
 	        return datosReserva;
             
-        } catch (InternalSlotsDAOException e) {
-        	//Al relanzar Exception con rollbackFor = Exception.class, Spring deshace los UPDATES que se hubieran ejecutado
+        } catch (BookingSlotsDAOException e) {
             throw new InternalSlotsServiceException(e.getMessage(), e);
         }
 	}

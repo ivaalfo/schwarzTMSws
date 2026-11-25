@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import eus.martico.schwarz.dao.BaseGenDAO;
 import eus.martico.schwarz.model.dto.SlotDTO;
-import eus.martico.schwarz.model.dto.SlotDetailDTO;
-import eus.martico.schwarz.model.dto.SlotSummaryDTO;
+import eus.martico.schwarz.model.dto.SlotReserExternDTO;
+import eus.martico.schwarz.model.dto.SlotReqExternDTO;
 
 
 /**
@@ -46,6 +46,7 @@ public class ExternalSlotsDAOImp extends BaseGenDAO<SlotDTO> implements External
     	"SELECT "+
     		"sufech as fecha, " + 
     		"sunudc as muelle, " +
+    		"suusky as reserva_id, " +
     		"SUBSTR(ashors, (int(sunuho) *10)-9, 5) as h_inicio, " +
     		"SUBSTR(ashors, (int(sunuho) *10)-4, 5) as h_fin " +
     			"FROM ldseus ,ldalmx , ldalma , ldalse " +
@@ -61,7 +62,7 @@ public class ExternalSlotsDAOImp extends BaseGenDAO<SlotDTO> implements External
     
     
     @Override
-    public List<SlotSummaryDTO> getAllFreeTimeSlots(final String _dateFrom, final String _dateTo) 
+    public List<SlotReqExternDTO> getAllFreeTimeSlots(final String _dateFrom, final String _dateTo) 
     		throws ExternalSlotsDAOException {
     	try {
     		//Usamos PreparedStatementSetter para obligar al driver a tipar cada parámetro correctamente
@@ -76,11 +77,12 @@ public class ExternalSlotsDAOImp extends BaseGenDAO<SlotDTO> implements External
 					},
             		//El mapeador que lee el ResultSet
                     (rs, rowNum) -> {
-                    	SlotSummaryDTO slotRe = new SlotSummaryDTO();
-                    	slotRe.setRecipientRDC(rs.getString("almacen_cod") != null ? rs.getString("almacen_cod").trim() : "");
-                    	slotRe.setDate(rs.getString("fecha"));
-                    	slotRe.setAvailableSlots(rs.getInt("slots_libres"));
-                        return slotRe;
+                    	SlotReqExternDTO slotReqEx = new SlotReqExternDTO();
+                    	slotReqEx.setRecipientRDC(rs.getString("almacen_cod") != null ? rs.getString("almacen_cod").trim() : "");
+                    	java.sql.Date fechaSql = rs.getDate("fecha");
+                    	slotReqEx.setDate(fechaSql != null ? fechaSql.toString() : "");
+                    	slotReqEx.setFreeSlots(rs.getInt("slots_libres"));
+                        return slotReqEx;
                     }
                 );
     	} catch (DataAccessException e) {
@@ -90,7 +92,7 @@ public class ExternalSlotsDAOImp extends BaseGenDAO<SlotDTO> implements External
     
     
     @Override
-    public List<SlotDetailDTO> getSlotDetail(final String _deliveryDate, final String _rdc) 
+    public List<SlotReserExternDTO> getSlotDetail(final String _rdc, final String _deliveryDate) 
     		throws ExternalSlotsDAOException {
     	try {
     		return this.jdbcTemplate.query(SQL_SELECT_RESERVA_DETALLE,
@@ -103,12 +105,14 @@ public class ExternalSlotsDAOImp extends BaseGenDAO<SlotDTO> implements External
 		    			}
 		    		}, 
     				(rs, rowNum) -> {
-    					SlotDetailDTO slotDet = new SlotDetailDTO();
-    					slotDet.setDate(rs.getString("fecha"));
-    					slotDet.setDock(rs.getInt("muelle"));
-    					slotDet.setStartTime(rs.getString("h_inicio") != null ? rs.getString("h_inicio").trim() : "");
-    					slotDet.setEndTime(rs.getString("h_fin") != null ? rs.getString("h_fin").trim() : "");
-    					return slotDet;
+    					SlotReserExternDTO slotReserEx = new SlotReserExternDTO();
+    					slotReserEx.setReservationId(rs.getLong("reserva_id"));
+    					java.sql.Date fechaSql = rs.getDate("fecha");
+    					slotReserEx.setDate(fechaSql != null ? fechaSql.toString() : "");
+    					slotReserEx.setDock(rs.getInt("muelle"));
+    					slotReserEx.setStartTime(rs.getString("h_inicio") != null ? rs.getString("h_inicio").trim() : "");
+    					slotReserEx.setEndTime(rs.getString("h_fin") != null ? rs.getString("h_fin").trim() : "");
+    					return slotReserEx;
     				}
     			);
     	} catch (DataAccessException e) {

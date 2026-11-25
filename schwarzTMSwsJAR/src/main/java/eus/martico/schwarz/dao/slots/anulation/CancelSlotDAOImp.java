@@ -25,7 +25,7 @@ public class CancelSlotDAOImp extends BaseGenDAO<SlotDTO> implements CancelSlotI
 	//A.SELECT inicial: valida que la reserva existe para ese almacén/orden/fecha y saca la 'reference'
 	private static final String SQL_SELECT_DELETE_INFO = 
 			"SELECT TRIM(dodest) || '-' || CHAR(dodoky) AS reference " +
-				"FROM ldseus, ldorca, ldalse, lddese " +
+				"FROM ldseus, ldorca, lddese, ldalmx " +
 				"WHERE TRIM(alxcmp4) = ? " +
 					"AND sualky = alxlky " +
 					"AND ocalky = sualky " +
@@ -33,43 +33,43 @@ public class CancelSlotDAOImp extends BaseGenDAO<SlotDTO> implements CancelSlotI
 					"AND suorky = ocorky " +
 					"AND ocorde = ? " +
 					"AND sufech = ? " +
-					"AND suusky = ?";
+					"AND suusky = ? " +
+					"FETCH FIRST 1 ROW ONLY";
 
-	//1er UPDATE (LDDESE): lee SUDOKY de LDSEUS antes de que se ponga a 0
+	//B.1.UPDATE (LDDESE): lee SUDOKY de LDSEUS antes de que se ponga a 0
 	private static final String SQL_UPDATE_DELETE_LDDESE = 
 			"UPDATE LDDESE SET " +
 				"doesta = '10', " +
 				"doorky = 0, " +
 				"dofecg = '01.01.0001', " +
-				"dohocg = ' ', " +
-				"domatr = ' ', " +
-				"doremo = ' ', " +
+				"dohocg = '', " +
+				"domatr = '', " +
+				"doremo = '', " +
 				"dofeen = '01.01.0001', " +
-				"doteen = ' ' " +
-					"WHERE dodoky = (SELECT sudoky FROM ldseus WHERE suusky = ?)";
+				"doteen = '' " +
+					"WHERE dodoky = (SELECT sudoky FROM ldseus WHERE suusky = ?) ";
 
-	//2o UPDATE (LDORCA): lee SUORKY de LDSEUS antes de que se ponga a 0
+	//B.2.UPDATE (LDORCA): lee SUORKY de LDSEUS antes de que se ponga a 0
 	private static final String SQL_UPDATE_DELETE_LDORCA = 
 			"UPDATE LDORCA SET " +
-				"octeen = ' ', " +
+				"octeen = '', " +
 				"ocesta = '00' " +
-					"WHERE ocorky = (SELECT suorky FROM ldseus WHERE suusky = ?)";
+					"WHERE ocorky = (SELECT suorky FROM ldseus WHERE suusky = ?) ";
 
-	//3er UPDATE (LDSEUS): ahora sí liberamos el slot poniendo claves a 0
+	//B.3.UPDATE (LDSEUS): ahora sí liberamos el slot poniendo claves a 0
 	private static final String SQL_UPDATE_DELETE_LDSEUS = 
 			"UPDATE LDSEUS SET " +
 				"suesta = '00', " +
 				"sudoky = 0, " +
 				"suorky = 0 " +
-					"WHERE suusky = ?";
+					"WHERE suusky = ? ";
 	
 	
 	@Override
-	public String getReferenceParaAnular(String _rdc, String _orderNo, String _deliveryDate, Long _reservationId) 
+	public String getReferenceToCancel(String _rdc, String _orderNo, String _deliveryDate, Long _reservationId) 
 			throws CancelSlotDAOException {
 	    try {
-	        List<String> refs = jdbcTemplate.query(
-	            SQL_SELECT_DELETE_INFO,
+	        List<String> refs = jdbcTemplate.query(SQL_SELECT_DELETE_INFO,
 	            new PreparedStatementSetter() {
 	                @Override
 	                public void setValues(PreparedStatement ps) throws SQLException {
@@ -89,7 +89,7 @@ public class CancelSlotDAOImp extends BaseGenDAO<SlotDTO> implements CancelSlotI
 	
 	
 	@Override
-	public void ejecutarAnulacionReserva(Long _reservationId) 
+	public void setCancelReservation(Long _reservationId) 
 			throws CancelSlotDAOException {
 	    try {
 	        //IMPORTANTE: Mantener estrictamente este orden (1. LDDESE -> 2. LDORCA -> 3. LDSEUS)

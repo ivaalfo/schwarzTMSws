@@ -15,8 +15,7 @@ public class TSRequestResponseDTO {
 	
     private String orderNumber;
     private String recipientCountry;
-    private String recipientRDC;
-    private List<SlotDTO> availableSlots;
+    private List<?> availableSlots;
 	
 
     //Getters, Setters y Constructor...
@@ -32,16 +31,10 @@ public class TSRequestResponseDTO {
 	public void setRecipientCountry(String recipientCountry) {
 		this.recipientCountry = recipientCountry;
 	}
-	public String getRecipientRDC() {
-		return recipientRDC;
-	}
-	public void setRecipientRDC(String recipientRDC) {
-		this.recipientRDC = recipientRDC;
-	}
-	public List<SlotDTO> getAvailableSlots() {
+	public List<?> getAvailableSlots() {
 		return availableSlots;
 	}
-	public void setAvailableSlots(List<SlotDTO> availableSlots) {
+	public void setAvailableSlots(List<?> availableSlots) {
 		this.availableSlots = availableSlots;
 	}
     

@@ -3,8 +3,8 @@ package eus.martico.schwarz.dao.slots.external;
 import java.util.List;
 
 import eus.martico.schwarz.dao.slots.internal.InternalSlotsDAOException;
-import eus.martico.schwarz.model.dto.SlotDetailDTO;
-import eus.martico.schwarz.model.dto.SlotSummaryDTO;
+import eus.martico.schwarz.model.dto.SlotReserExternDTO;
+import eus.martico.schwarz.model.dto.SlotReqExternDTO;
 
 
 /**
@@ -23,17 +23,17 @@ public interface ExternalSlotsIDAO {
 	 * @return List<SlotSummaryDTO>
 	 * @throws InternalSlotsDAOException
 	 */
-	List<SlotSummaryDTO> getAllFreeTimeSlots(String _dateFrom, String _dateTo) 
+	List<SlotReqExternDTO> getAllFreeTimeSlots(String _dateFrom, String _dateTo) 
 			throws ExternalSlotsDAOException;
 	
     /**
-	 * @param _deliveryDate
 	 * @param _rdc
+	 * @param _deliveryDate
 	 * 
 	 * @return List<SlotDetailDTO>
 	 * @throws InternalSlotsDAOException
 	 */
-    List<SlotDetailDTO> getSlotDetail(String _deliveryDate, String _rdc) 
+    List<SlotReserExternDTO> getSlotDetail(String _rdc, String _deliveryDate) 
 			throws ExternalSlotsDAOException;
 
 }

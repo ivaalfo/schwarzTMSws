@@ -35,13 +35,13 @@ public class CancelSlotServiceImp implements CancelSlotIService {
 	        Long reserveId = _requestData.getReservationId();
 
 	        //1.Comprobamos que la reserva existe y obtenemos su Reference
-	        String reference = cancelSlotsDAO.getReferenceParaAnular(rdc, orderNo, reqDeliveryDate, reserveId);
+	        String reference = cancelSlotsDAO.getReferenceToCancel(rdc, orderNo, reqDeliveryDate, reserveId);
 	        if (reference == null) {
 	            return null;
 	        }
 
 	        //2.Ejecutamos los 3 UPDATES en orden dentro de la transacción JTA
-	        cancelSlotsDAO.ejecutarAnulacionReserva(reserveId);
+	        cancelSlotsDAO.setCancelReservation(reserveId);
 
 	        //3.Montamos DTO de respuesta
 	        TSDeleteResponseDTO response = new TSDeleteResponseDTO();

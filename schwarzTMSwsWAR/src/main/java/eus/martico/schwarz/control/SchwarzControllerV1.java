@@ -16,12 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import eus.martico.schwarz.config.tmsConstantes;
 import eus.martico.schwarz.config.ws.tmsWsConfig;
-import eus.martico.schwarz.model.dto.SlotDTO;
+import eus.martico.schwarz.model.dto.SlotReserExternDTO;
 import eus.martico.schwarz.model.dto.TSBookDTO;
 import eus.martico.schwarz.model.dto.TSBookResponseDTO;
 import eus.martico.schwarz.model.dto.TSRequestDTO;
 import eus.martico.schwarz.model.dto.TSRequestResponseDTO;
 import eus.martico.schwarz.model.dto.TSReserveDTO;
+import eus.martico.schwarz.model.dto.TSReserveExternalResponseDTO;
 import eus.martico.schwarz.model.dto.TSReserveResponseDTO;
 import eus.martico.schwarz.model.dto.anulation.TSDeleteDTO;
 import eus.martico.schwarz.model.dto.anulation.TSDeleteResponseDTO;
@@ -104,10 +105,15 @@ public class SchwarzControllerV1 {
 			    return new ResponseEntity<>(errorDateRange, HttpStatus.BAD_REQUEST);
 			}
 			
-			//Si el pedido es INTERNO se devuelve una unica fecha posible que previamente se ha reservado de forma interna.
-			List<SlotDTO> slotsLibres = internalSlotService.buscarSlotsPorFiltro(codigoAlmacen, numOrden, deliveryDateFrom, deliveryDateTo);
-			//Si el pedido es EXTERNO se devuelve la lista de fechas y nº de huecos disponibles
-			//TODO: (SQL_SELECT_ALL_TIME_SLOTS) -> externalSlotService.buscarTodosSlotsLibres();
+			List<?> slotsLibres = null;
+			//TODO METER LA CONDICION REAL DE INTERNO/EXTERNO
+			if("INTER".equals(requestData.getRecipientCountry())){
+				//Si el pedido es INTERNO se devuelve una unica fecha posible que previamente se ha reservado de forma interna.
+				slotsLibres = internalSlotService.buscarSlotsPorFiltro(codigoAlmacen, numOrden, deliveryDateFrom, deliveryDateTo);
+			} else {
+				//Si el pedido es EXTERNO se devuelve la lista de fechas y nº de huecos disponibles de cada almacen
+				slotsLibres = externalSlotService.buscarTodosSlotsLibres(deliveryDateFrom, deliveryDateTo);
+			}
 			
 			//5.Si no encuentra nada, disparamos el JSON de error controlado
 			if (slotsLibres == null || slotsLibres.isEmpty()) {
@@ -122,7 +128,6 @@ public class SchwarzControllerV1 {
 			TSRequestResponseDTO response = new TSRequestResponseDTO();
 			response.setOrderNumber(numOrden);
 			response.setRecipientCountry(requestData.getRecipientCountry());
-			response.setRecipientRDC(codigoAlmacen);
 			response.setAvailableSlots(slotsLibres);
 
 			return new ResponseEntity<>(response, HttpStatus.OK);
@@ -183,28 +188,49 @@ public class SchwarzControllerV1 {
 			    return new ResponseEntity<>(errorBadTime, HttpStatus.BAD_REQUEST);
 			}
 			
-	        //Si es una reserva INTERNA devolvemos el ID de la reserva (suusky) que previamente y de forma interna se dió de alta.
-	        Long idReserva = internalSlotService.buscarSlotReserva(codigoAlmacen, numOrden, fechaEntrega);
-	        //Si es una reserva EXTERNA, como no estará previamente dada de alta, se retornan la lista de slots libres.
-	        //TODO: (SQL_SELECT_ALL_TIME_SLOTS) -> externalSlotService.buscarDetalleSlotsPorFecha();
-			
-	        //5.Si no encuentra nada, disparamos el JSON de error controlado
-	        if (idReserva == null || idReserva <= 0) {
-	        	logger.info("TSReserve: orderNumber: {}. Cannot reserve this timeslot. Already taken or invalid.", requestData.getOrderNumber());
-	            Map<String, Object> errorNoSlots = new LinkedHashMap<>();
-	            errorNoSlots.put("Result", 30);
-	            errorNoSlots.put("Information", "Error");
-	            errorNoSlots.put("Message", "Cannot reserve this timeslot. Already taken or invalid.");
-	            return new ResponseEntity<>(errorNoSlots, HttpStatus.OK);
+			//TODO METER LA CONDICION REAL DE INTERNO/EXTERNO
+			if("INTER".equals(requestData.getRecipientCountry())){
+				//A.Si es una reserva INTERNA devolvemos el ID de la reserva (suusky) que previamente y de forma interna se dió de alta.
+				Long idReserva = internalSlotService.buscarSlotReserva(codigoAlmacen, numOrden, fechaEntrega);
+	        	
+	        	//5A.Si no encuentra nada, disparamos el JSON de error controlado
+		        if (idReserva == null || idReserva <= 0) {
+		        	logger.info("TSReserve: orderNumber: {}. Cannot reserve this timeslot. Already taken or invalid.", requestData.getOrderNumber());
+		            Map<String, Object> errorNoSlots = new LinkedHashMap<>();
+		            errorNoSlots.put("Result", 30);
+		            errorNoSlots.put("Information", "Error");
+		            errorNoSlots.put("Message", "Cannot reserve this timeslot. Already taken or invalid.");
+		            return new ResponseEntity<>(errorNoSlots, HttpStatus.OK);
+		        }
+		        //6A.Si todo va bien, montamos DTO de éxito (Código de éxito "OK = 10")
+		        TSReserveResponseDTO response = new TSReserveResponseDTO();
+		        response.setResult(10);
+		        response.setOrderNumber(numOrden);
+		        response.setReservationId(idReserva);
+		        
+		        return new ResponseEntity<>(response, HttpStatus.OK);
+	        } else {
+	        	//B.Si es una reserva EXTERNA, como no estará previamente dada de alta, se retornan la lista de slots libres.
+	        	List<SlotReserExternDTO> listaSlots = externalSlotService.buscarDetalleSlotsPorFecha(codigoAlmacen, fechaEntrega);
+	        	
+	        	//5B.Si no encuentra nada, disparamos el JSON de error controlado
+		        if (listaSlots == null || listaSlots.isEmpty()) {
+		        	logger.info("TSReserve: orderNumber: {}. Cannot reserve any timeslot. Already taken or invalid.", requestData.getOrderNumber());
+		            Map<String, Object> errorNoSlots = new LinkedHashMap<>();
+		            errorNoSlots.put("Result", 30);
+		            errorNoSlots.put("Information", "Error");
+		            errorNoSlots.put("Message", "Cannot reserve any timeslot. Already taken or invalid.");
+		            return new ResponseEntity<>(errorNoSlots, HttpStatus.OK);
+		        }
+		        //6B.Si todo va bien, montamos DTO de éxito (Código de éxito "OK = 10")
+		        TSReserveExternalResponseDTO response = new TSReserveExternalResponseDTO();
+		        response.setResult(10);
+		        response.setOrderNumber(numOrden);
+		        response.setAvailableSlots(listaSlots);
+		        
+		        return new ResponseEntity<>(response, HttpStatus.OK);
 	        }
-	        //6.Si todo va bien, montamos DTO de éxito (Código de éxito "OK = 10")
-	        TSReserveResponseDTO response = new TSReserveResponseDTO();
-	        response.setResult(10);
-	        response.setOrderNumber(numOrden);
-	        response.setReservationId(idReserva);
-
-	        return new ResponseEntity<>(response, HttpStatus.OK);
-	        
+			
 	    } catch (Exception e) {
 	    	logger.error("TSReserve: Internal Server Error 500: ", e);
 			Map<String, Object> errorCritico = new LinkedHashMap<>();
@@ -256,7 +282,25 @@ public class SchwarzControllerV1 {
 	            errorBadTime.put("Message", "Invalid time format. Expected ISO UTC format (07:00:00Z or 07:00:00.000Z)");
 	            return new ResponseEntity<>(errorBadTime, HttpStatus.BAD_REQUEST);
 	        }
-	        //5.Validamos que reservationId venga informado y sea positivo (DECIMAL 15,0 en BD)
+	        //6.1.Validamos fecha y hora de descarga (uploadingDateDCT y uploadingTimeDCT) si vienen informadas
+	        if (!DateTimeValidator.esFechaValidaISO(requestData.getUploadingDateDCT())) {
+	            logger.info("TSBook: orderNumber: {}. Invalid uploadingDateDCC: '{}'", requestData.getOrderNumber(), requestData.getUploadingDateDCT());
+	            Map<String, Object> errorBadUpDate = new LinkedHashMap<>();
+	            errorBadUpDate.put("Result", 30);
+	            errorBadUpDate.put("Information", "Error");
+	            errorBadUpDate.put("Message", "Invalid uploadingDateDCC format. Expected valid ISO date (YYYY-MM-DD)");
+	            return new ResponseEntity<>(errorBadUpDate, HttpStatus.BAD_REQUEST);
+	        }
+	        //6.2.Validamos fecha y hora de descarga (uploadingDateDCT y uploadingTimeDCT) si vienen informadas
+	        if (!DateTimeValidator.esHoraValidaUTC(requestData.getUploadingTimeDCT())) {
+	            logger.info("TSBook: orderNumber: {}. Invalid uploadingTimeDCT: '{}'", requestData.getOrderNumber(), requestData.getUploadingTimeDCT());
+	            Map<String, Object> errorBadUpTime = new LinkedHashMap<>();
+	            errorBadUpTime.put("Result", 30);
+	            errorBadUpTime.put("Information", "Error");
+	            errorBadUpTime.put("Message", "Invalid uploadingTimeDCT format. Expected ISO UTC format (07:00:00Z or 07:00:00.000Z)");
+	            return new ResponseEntity<>(errorBadUpTime, HttpStatus.BAD_REQUEST);
+	        }
+	        //7.Validamos que reservationId venga informado y sea positivo (DECIMAL 15,0 en BD)
 	        if (requestData.getReservationId() <= 0) {
 	            logger.info("TSBook: orderNumber: {}. Invalid or missing reservationId: '{}'", requestData.getOrderNumber(), requestData.getReservationId());
 	            Map<String, Object> errorBadResId = new LinkedHashMap<>();
@@ -266,11 +310,17 @@ public class SchwarzControllerV1 {
 	            return new ResponseEntity<>(errorBadResId, HttpStatus.BAD_REQUEST);
 	        }
 	        
-	        //El servicio buscará el slot correspondiente a ese codigoAlmacen, numOrden, fecha e idReserva'.
-	        //Si lo encuentra lo registramos en nuestra BD. Y devolvemos un objetoDTO con los datos de confirmación.
-	        TSBookResponseDTO resultadoBook = internalSlotService.confirmarReservaSlot(requestData);
-			
-	        //6.Si no se puede confirmar, disparamos el JSON de error controlado
+	        TSBookResponseDTO resultadoBook = null;
+			//TODO METER LA CONDICION REAL DE INTERNO/EXTERNO
+			if("INTER".equals(requestData.getRecipientCountry())){
+				//A.El servicio buscará el slot correspondiente a ese codigoAlmacen, numOrden, fecha e idReserva'.
+				resultadoBook = internalSlotService.confirmarReservaSlotInterna(requestData);
+			} else {
+				//B.Lo registramos/actualizamos en nuestra BD. Y devolvemos el objetoDTO con los datos de confirmación.
+				resultadoBook = externalSlotService.confirmarReservaSlotExterna(requestData);
+			}
+			//Si lo encuentra devolvemos un objetoDTO con los datos de confirmación.
+			//8.Si no se puede confirmar, disparamos el JSON de error controlado
 	        if (resultadoBook == null) {
 	        	logger.info("TSBook: orderNumber: {}. Cannot book this timeslot {}. Already taken or invalid", requestData.getOrderNumber(), requestData.getReservationId());
 	            Map<String, Object> errorNoSlots = new LinkedHashMap<>();
@@ -279,8 +329,7 @@ public class SchwarzControllerV1 {
 	            errorNoSlots.put("Message", "Cannot book this timeslot. Already taken or invalid.");
 	            return new ResponseEntity<>(errorNoSlots, HttpStatus.OK);
 	        }
-
-	        //7.Si todo va bien, montamos DTO de éxito (Código de éxito "OK = 10")
+	        //9.Si todo va bien, montamos DTO de éxito (Código de éxito "OK = 10")
 	        resultadoBook.setResult(10);
 	        return new ResponseEntity<>(resultadoBook, HttpStatus.OK);
 	        

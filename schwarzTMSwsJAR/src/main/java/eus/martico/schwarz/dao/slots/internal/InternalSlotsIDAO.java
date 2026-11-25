@@ -3,7 +3,6 @@ package eus.martico.schwarz.dao.slots.internal;
 import java.util.List;
 
 import eus.martico.schwarz.model.dto.SlotDTO;
-import eus.martico.schwarz.model.dto.TSBookResponseDTO;
 
 
 /**
@@ -38,17 +37,5 @@ public interface InternalSlotsIDAO {
     Long getSlotReserve(String _rdc, String _orderNo, String _deliveryDate) 
 			throws InternalSlotsDAOException;
     
-	/**
-	 * @param _rdc
-	 * @param _orderNum
-	 * @param _deliveryDate
-	 * @param _reserveId
-	 * 
-	 * @return TSBookResponseDTO
-	 */
-	TSBookResponseDTO getSlotBookInfo(String _rdc, String _orderNum, String _deliveryDate, Long _reserveId) 
-			throws InternalSlotsDAOException;
-	
-	
 
 }

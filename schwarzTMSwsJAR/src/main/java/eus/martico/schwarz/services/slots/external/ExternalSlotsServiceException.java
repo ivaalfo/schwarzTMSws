@@ -10,14 +10,16 @@ import eus.martico.schwarz.services.MyServiceException;
  * @see https://www.martico.es/
  *
  */
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ExternalSlotsServiceException extends MyServiceException {
+	
+	private static final long serialVersionUID = 1L;
 
 	public ExternalSlotsServiceException(String _msgError) {
 		super(_msgError);
 	}
 
-	public ExternalSlotsServiceException(String string, Exception _ex) {
+	public ExternalSlotsServiceException(String _string, Exception _ex) {
 		super(_ex);
 	}
 

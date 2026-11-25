@@ -23,6 +23,8 @@ public class TSBookDTO {
 	private int togId;
 	private List<TSBookLoadDTO> load; 	//Mapea el array JSON de la carga automáticamente
 	private String transporterName;
+	//TODO NEXT
+//	private String transporterNIF;
 	
 	private long reservationId;
 	private String licensePlate;
@@ -146,6 +148,12 @@ public class TSBookDTO {
 	public void setUploadingTimeDCT(String uploadingTimeDCT) {
 		this.uploadingTimeDCT = uploadingTimeDCT;
 	}
+//	public String getTransporterNIF() {
+//		return transporterNIF;
+//	}
+//	public void setTransporterNIF(String transporterNIF) {
+//		this.transporterNIF = transporterNIF;
+//	}
 
 
 }
